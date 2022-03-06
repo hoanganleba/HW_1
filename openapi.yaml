@@ -1,0 +1,164 @@
+swagger: "2.0"
+info:
+  description: "Homework description"
+  version: "1.0.0"
+  title: "LAB FE 14 NodeJS HW #1"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "Kyrylo_Yezhov@epam.com"
+host: "localhost:8080"
+basePath: "/"
+tags:
+- name: "File"
+  description: "Everything about files reading/creation"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+schemes:
+- "http"
+paths:
+  /api/files:
+    post:
+      tags:
+      - "File"
+      summary: "Create file"
+      description: "Create file with params"
+      operationId: "createFile"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "File data"
+        schema:
+          type: "object"
+          required: 
+            - filename
+            - content
+          properties:
+            filename:
+              type: string
+              example: "notes.txt"
+            content:
+              type: string
+              example: "1. Create PR for my mentor"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "File created successfully"
+        "400":
+          description: "Bad request"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Please specify 'content' parameter"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+      - "File"
+      summary: "Get files"
+      description: "Get list of all uploaded files as array of filenames"
+      operationId: "getFiles"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Success"
+              files:
+                type: array
+                items:
+                  type: string
+                  example: "notes.txt"
+        "400":
+          description: "Bad request"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Client error"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: '#/definitions/Error'
+  /api/files/{filename}:
+    get:
+      tags:
+      - "File"
+      summary: "Get file by filename"
+      description: "Get file detailed info by specified filename"
+      operationId: "getFile"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "filename"
+        required: true
+        type: string
+        description: "File name"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Success"
+              filename:
+                type: string
+                example: "notes.txt"
+              content:
+                type: string
+                example: "1. Create PR for my mentor"
+              extension:
+                type: string
+                example: "txt"
+              uploadedDate:
+                type: string
+                format: date-time
+                example: "2017-07-21T17:32:28Z"
+        "400":
+          description: "Bad request"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "No file with 'notes.txt' filename found"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Error:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+        description: "Error message"
+        example: "Server error"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
